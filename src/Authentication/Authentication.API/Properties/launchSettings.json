@@ -4,17 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:57773",
-      "sslPort": 44371
+      "applicationUrl": "http://localhost:34225",
+      "sslPort": 44363
     }
   },
   "profiles": {
-    "Boxygen.API": {
+    "Authentication.API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7218;http://localhost:5051",
+      "applicationUrl": "https://localhost:7000;http://localhost:5048",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
