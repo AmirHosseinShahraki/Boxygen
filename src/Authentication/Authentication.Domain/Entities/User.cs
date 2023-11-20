@@ -5,6 +5,6 @@ public class User
     public Guid Id { get; set; }
     public string Username { get; set; } = null!;
     public string Password { get; set; } = null!;
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; } 
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } 
 }

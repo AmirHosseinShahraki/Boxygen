@@ -7,12 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MassTransit" Version="8.1.2" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
+        <PackageReference Include="MassTransit" Version="8.1.2"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Shared\Shared.csproj" />
-      <ProjectReference Include="..\Authentication.Domain\Authentication.Domain.csproj" />
+        <Using Include="BCrypt.Net.BCrypt" Alias="BC"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\..\Shared\Shared.csproj"/>
+        <ProjectReference Include="..\Authentication.Domain\Authentication.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

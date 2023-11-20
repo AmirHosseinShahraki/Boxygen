@@ -39,10 +39,10 @@ public static class DependencyInjection
         services.AddMassTransit(x =>
         {
             x.AddConsumer<UserRegistrationConsumer>();
+            x.AddConsumer<UserLoginConsumer>();
             x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
         });
-
-
+        
         return services;
     }
 }

@@ -28,10 +28,16 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public async Task<User> GetUserByUsername(string username)
+    {
+        var user = await _userCollection.Find(u => u.Username == username).FirstOrDefaultAsync();
+        return user;
+    }
+
     public async Task<User> CreateUser(User user)
     {
         user.Id = Guid.NewGuid();
-        user.CreatedAt = DateTimeOffset.UtcNow;
+        user.CreatedAt = DateTime.UtcNow;
         user.UpdatedAt = user.CreatedAt;
         await _userCollection.InsertOneAsync(user);
         return user;
