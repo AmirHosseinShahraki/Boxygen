@@ -1,6 +1,6 @@
 ﻿using Authentication.Application.IRepositories;
 using Authentication.Domain.Commands;
-using Authentication.Domain.Events;
+using Authentication.Domain.Messages;
 using BCrypt.Net;
 using MassTransit;
 
@@ -21,13 +21,14 @@ public class UserLoginConsumer : IConsumer<LoginUser>
 
         if (user is null || !BC.EnhancedVerify(context.Message.Password, user.Password, HashType.SHA512))
         {
-            await context.RespondAsync(new LoginFailed()
+            await context.RespondAsync(new AuthFailed()
             {
                 Username = context.Message.Username
             });
+            return;
         }
 
-        await context.RespondAsync(new AuthTokenGenerated()
+        await context.RespondAsync(new AuthToken()
         {
             AccessToken = "AccessToken",
             ExpiresAt = DateTime.UtcNow.AddMinutes(60)

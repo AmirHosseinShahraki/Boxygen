@@ -22,16 +22,22 @@ public class UserRepository : IUserRepository
         return users;
     }
 
-    public async Task<User> GetUserById(Guid userId)
+    public async Task<User?> GetUserById(Guid userId)
     {
         var user = await _userCollection.Find(u => u.Id == userId).FirstOrDefaultAsync();
         return user;
     }
 
-    public async Task<User> GetUserByUsername(string username)
+    public async Task<User?> GetUserByUsername(string username)
     {
         var user = await _userCollection.Find(u => u.Username == username).FirstOrDefaultAsync();
         return user;
+    }
+
+    public async Task<bool> CheckUsernameExists(string username)
+    {
+        var count = await _userCollection.Find(u => u.Username == username).CountDocumentsAsync();
+        return count != 0;
     }
 
     public async Task<User> CreateUser(User user)

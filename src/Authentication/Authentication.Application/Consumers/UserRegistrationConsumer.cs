@@ -1,6 +1,7 @@
 ﻿using Authentication.Application.IRepositories;
 using Authentication.Domain.Commands;
 using Authentication.Domain.Entities;
+using Authentication.Domain.Messages;
 using BCrypt.Net;
 using MassTransit;
 using Shared.Events;
@@ -18,6 +19,14 @@ public class UserRegistrationConsumer : IConsumer<RegisterUser>
 
     public async Task Consume(ConsumeContext<RegisterUser> context)
     {
+        var usernameExists = await _userRepository.CheckUsernameExists(context.Message.Username);
+        if (usernameExists)
+        {
+            var usernameTakenEvent = new UsernameTaken();
+            await context.RespondAsync(usernameTakenEvent);
+            return;
+        }
+
         var hashedPassword = BC.EnhancedHashPassword(context.Message.Password, HashType.SHA512);
         var createdUser = await _userRepository.CreateUser(new User()
         {

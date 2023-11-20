@@ -1,6 +1,6 @@
 ﻿using Authentication.API.DTOs;
 using Authentication.Domain.Commands;
-using Authentication.Domain.Events;
+using Authentication.Domain.Messages;
 using Shared.Events;
 using AutoMapper;
 using MassTransit;
@@ -25,8 +25,14 @@ public class AuthController : ApiControllerBase
     public async Task<IActionResult> Register(RegistrationDto registrationDto)
     {
         var registerUserCommand = Mapper.Map<RegisterUser>(registrationDto);
-        var response = await _registrationClient.GetResponse<NewUserRegistered>(registerUserCommand);
-        return Ok(response.Message);
+        Response response = await _registrationClient.GetResponse<NewUserRegistered, UsernameTaken>(registerUserCommand);
+
+        return response switch
+        {
+            (_, NewUserRegistered registeredUser) => Ok(registeredUser),
+            (_, UsernameTaken) => Conflict(),
+            _ => throw new InvalidOperationException()
+        };
     }
 
     [HttpPost]
@@ -34,12 +40,12 @@ public class AuthController : ApiControllerBase
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
         var loginUserCommand = Mapper.Map<LoginUser>(loginDto);
-        Response response = await _loginClient.GetResponse<AuthTokenGenerated, LoginFailed>(loginUserCommand);
+        Response response = await _loginClient.GetResponse<AuthToken, AuthFailed>(loginUserCommand);
 
         return response switch
         {
-            (_, AuthTokenGenerated authTokenGenerated) => Ok(authTokenGenerated),
-            (_, LoginFailed) => Unauthorized(),
+            (_, AuthToken authTokenGenerated) => Ok(authTokenGenerated),
+            (_, AuthFailed) => Unauthorized(),
             _ => throw new InvalidOperationException()
         };
     }
