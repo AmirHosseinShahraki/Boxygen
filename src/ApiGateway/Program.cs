@@ -22,7 +22,6 @@ builder.Services
         rsa.ImportFromPem(publicKey.ToCharArray());
         options.TokenValidationParameters = new TokenValidationParameters()
         {
-            RequireExpirationTime = true,
             ValidateAudience = false,
             ValidateIssuer = false,
             IssuerSigningKey = new RsaSecurityKey(rsa),
