@@ -1,6 +1,6 @@
 ﻿using Authentication.Domain.Entities;
 
-namespace Authentication.Application.IRepositories;
+namespace Authentication.Domain.Repositories;
 
 public interface IUserRepository
 {

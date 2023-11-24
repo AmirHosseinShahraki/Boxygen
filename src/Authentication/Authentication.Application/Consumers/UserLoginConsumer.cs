@@ -1,6 +1,7 @@
-﻿using Authentication.Application.IRepositories;
+﻿using Authentication.Application.Services;
 using Authentication.Domain.Commands;
 using Authentication.Domain.Messages;
+using Authentication.Domain.Repositories;
 using BCrypt.Net;
 using MassTransit;
 
@@ -9,10 +10,12 @@ namespace Authentication.Application.Consumers;
 public class UserLoginConsumer : IConsumer<LoginUser>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IJwtService _jwtService;
 
-    public UserLoginConsumer(IUserRepository userRepository)
+    public UserLoginConsumer(IUserRepository userRepository, IJwtService jwtService)
     {
         _userRepository = userRepository;
+        _jwtService = jwtService;
     }
 
     public async Task Consume(ConsumeContext<LoginUser> context)
@@ -28,10 +31,8 @@ public class UserLoginConsumer : IConsumer<LoginUser>
             return;
         }
 
-        await context.RespondAsync(new AuthToken()
-        {
-            AccessToken = "AccessToken",
-            ExpiresAt = DateTime.UtcNow.AddMinutes(60)
-        });
+        var authToken = _jwtService.GenerateToken(user.Username);
+
+        await context.RespondAsync(authToken);
     }
 }

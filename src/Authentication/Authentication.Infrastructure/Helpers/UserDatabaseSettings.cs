@@ -1,4 +1,4 @@
-﻿namespace Authentication.Infrastructure;
+﻿namespace Authentication.Infrastructure.Helpers;
 
 public class UserDatabaseSettings
 {

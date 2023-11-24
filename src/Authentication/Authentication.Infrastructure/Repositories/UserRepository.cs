@@ -1,5 +1,6 @@
-﻿using Authentication.Application.IRepositories;
-using Authentication.Domain.Entities;
+﻿using Authentication.Domain.Entities;
+using Authentication.Domain.Repositories;
+using Authentication.Infrastructure.Helpers;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;

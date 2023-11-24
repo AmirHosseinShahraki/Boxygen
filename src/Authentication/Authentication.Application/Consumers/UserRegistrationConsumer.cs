@@ -1,7 +1,7 @@
-﻿using Authentication.Application.IRepositories;
-using Authentication.Domain.Commands;
+﻿using Authentication.Domain.Commands;
 using Authentication.Domain.Entities;
 using Authentication.Domain.Messages;
+using Authentication.Domain.Repositories;
 using BCrypt.Net;
 using MassTransit;
 using Shared.Events;
