@@ -5,28 +5,31 @@
   },
   "Routes": [
     {
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-      "AddClaimsToRequest": {
-        "userId": "Claims[sub] > value"
-      },
       "UpstreamPathTemplate": "/gateway/profile",
       "UpstreamHttpMethod": [
         "Get"
       ],
-      "DownstreamPathTemplate": "/profiles/{userId}",
-      "ChangeDownstreamPathTemplate": {
-        "userId": "Claims[sub] > value"
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
       },
+      "DownstreamPathTemplate": "/profiles/{userId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 7001
         }
-      ]
+      ],
+      "ChangeDownstreamPathTemplate": {
+        "userId": "Claims[sub] > value"
+      },
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      }
     }
   ]
 }

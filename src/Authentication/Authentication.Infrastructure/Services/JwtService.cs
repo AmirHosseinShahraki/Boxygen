@@ -30,7 +30,7 @@ public class JwtService : IJwtService
     {
         var claims = new[]
         {
-            new Claim("sub", username),
+            new Claim(JwtRegisteredClaimNames.Sub, username),
         };
         var expires = DateTime.UtcNow.Add(_configuration.ExpiryTimeSpan);
         var token = new JwtSecurityToken(_configuration.Issuer,
