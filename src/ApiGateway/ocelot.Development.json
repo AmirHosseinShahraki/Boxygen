@@ -1,0 +1,32 @@
+﻿{
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7002",
+    "AdministrationPath": "/administration"
+  },
+  "Routes": [
+    {
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "AddClaimsToRequest": {
+        "userId": "Claims[sub] > value"
+      },
+      "UpstreamPathTemplate": "/gateway/profile",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "DownstreamPathTemplate": "/profiles/{userId}",
+      "ChangeDownstreamPathTemplate": {
+        "userId": "Claims[sub] > value"
+      },
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ]
+    }
+  ]
+}

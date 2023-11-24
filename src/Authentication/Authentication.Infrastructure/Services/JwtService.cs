@@ -17,6 +17,7 @@ public class JwtService : IJwtService
 
     public JwtService(IOptions<JwtConfiguration> configuration)
     {
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         _configuration = configuration.Value;
         var rsa = RSA.Create();
         rsa.ImportFromPem(_configuration.PrivateKey.ToCharArray());
@@ -29,13 +30,13 @@ public class JwtService : IJwtService
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, username),
+            new Claim("sub", username),
         };
         var expires = DateTime.UtcNow.Add(_configuration.ExpiryTimeSpan);
         var token = new JwtSecurityToken(_configuration.Issuer,
             _configuration.Audience,
             claims,
-            expires,
+            expires: expires,
             signingCredentials: _credentials);
 
         return new AuthToken()
