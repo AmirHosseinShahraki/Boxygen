@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.API", "src\A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profile.API", "src\Profile\Profile.API\Profile.API.csproj", "{DB8AAD02-F53A-48EB-8B0D-B7FB5BC7A82C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "src\ApiGateway\ApiGateway.csproj", "{8BAD48ED-7ADF-4201-B588-9DA920E30AE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "src\Gateway\Gateway.csproj", "{8BAD48ED-7ADF-4201-B588-9DA920E30AE6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profile.Application", "src\Profile\Profile.Application\Profile.Application.csproj", "{B490A4C2-D223-4498-840E-56AD209DD4E4}"
 EndProject
