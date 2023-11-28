@@ -17,11 +17,11 @@ public static class DependencyInjection
         services.Configure<JwtConfiguration>(
             configuration.GetSection("JwtConfiguration"));
 
-        services.AddUserDatabase(configuration);
+        services.AddCredentialDatabase(configuration);
 
         services.AddMassTransit(configuration);
 
-        services.AddSingleton<IUserRepository, UserRepository>();
+        services.AddSingleton<ICredentialRepository, CredentialsRepository>();
         services.AddSingleton<IJwtService, JwtService>();
 
         return services;

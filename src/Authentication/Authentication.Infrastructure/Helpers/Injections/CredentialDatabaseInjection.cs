@@ -8,20 +8,20 @@ using MongoDB.Driver;
 
 namespace Authentication.Infrastructure.Helpers.Injections;
 
-internal static class UserDatabaseInjection
+internal static class CredentialDatabaseInjection
 {
-    public static IServiceCollection AddUserDatabase(this IServiceCollection services,
+    public static IServiceCollection AddCredentialDatabase(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<UserDatabaseSettings>(options =>
-            configuration.GetSection("UserDatabaseSettings").Bind(options));
-        var userDatabaseSettings = configuration.GetSection("UserDatabaseSettings").Get<UserDatabaseSettings>()!;
+        services.Configure<CredentialDatabaseSettings>(options =>
+            configuration.GetSection("CredentialDatabaseSettings").Bind(options));
+        var credentialDatabaseSettings = configuration.GetSection("CredentialDatabaseSettings").Get<CredentialDatabaseSettings>()!;
         services.AddSingleton<IMongoClient>(sp =>
         {
-            var connectionString = userDatabaseSettings.ConnectionString;
+            var connectionString = credentialDatabaseSettings.ConnectionString;
             return new MongoClient(connectionString);
         });
-        BsonClassMap.RegisterClassMap<User>(cm =>
+        BsonClassMap.RegisterClassMap<Credential>(cm =>
         {
             cm.AutoMap();
             cm.MapIdMember(c => c.Id)

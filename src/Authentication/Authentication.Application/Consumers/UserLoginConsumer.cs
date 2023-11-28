@@ -9,18 +9,18 @@ namespace Authentication.Application.Consumers;
 
 public class UserLoginConsumer : IConsumer<LoginUser>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly ICredentialRepository _credentialRepository;
     private readonly IJwtService _jwtService;
 
-    public UserLoginConsumer(IUserRepository userRepository, IJwtService jwtService)
+    public UserLoginConsumer(ICredentialRepository credentialRepository, IJwtService jwtService)
     {
-        _userRepository = userRepository;
+        _credentialRepository = credentialRepository;
         _jwtService = jwtService;
     }
 
     public async Task Consume(ConsumeContext<LoginUser> context)
     {
-        var user = await _userRepository.GetUserByUsername(context.Message.Username);
+        var user = await _credentialRepository.GetCredentialsByUsername(context.Message.Username);
 
         if (user is null || !BC.EnhancedVerify(context.Message.Password, user.Password, HashType.SHA512))
         {

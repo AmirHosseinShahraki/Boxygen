@@ -10,16 +10,18 @@ namespace Authentication.Application.Consumers;
 
 public class UserRegistrationConsumer : IConsumer<RegisterUser>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IBus _bus;
+    private readonly ICredentialRepository _credentialRepository;
 
-    public UserRegistrationConsumer(IUserRepository userRepository)
+    public UserRegistrationConsumer(IBus bus, ICredentialRepository credentialRepository)
     {
-        _userRepository = userRepository;
+        _bus = bus;
+        _credentialRepository = credentialRepository;
     }
 
     public async Task Consume(ConsumeContext<RegisterUser> context)
     {
-        var usernameExists = await _userRepository.CheckUsernameExists(context.Message.Username);
+        var usernameExists = await _credentialRepository.CheckUsernameExists(context.Message.Username);
         if (usernameExists)
         {
             var usernameTakenEvent = new UsernameTaken();
@@ -28,7 +30,7 @@ public class UserRegistrationConsumer : IConsumer<RegisterUser>
         }
 
         var hashedPassword = BC.EnhancedHashPassword(context.Message.Password, HashType.SHA512);
-        var createdUser = await _userRepository.CreateUser(new User()
+        var createdUser = await _credentialRepository.CreateCredentials(new Credential()
         {
             Username = context.Message.Username,
             Password = hashedPassword
@@ -36,9 +38,10 @@ public class UserRegistrationConsumer : IConsumer<RegisterUser>
 
         var newUserRegisteredEvent = new NewUserRegistered()
         {
-            Id = createdUser.Id.ToString(),
+            Id = createdUser.Id,
             Username = context.Message.Username,
         };
         await context.RespondAsync(newUserRegisteredEvent);
+        await _bus.Publish(newUserRegisteredEvent);
     }
 }

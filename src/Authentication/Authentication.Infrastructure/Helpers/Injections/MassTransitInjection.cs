@@ -14,7 +14,16 @@ internal static class MassTransitInjection
         {
             x.AddConsumer<UserRegistrationConsumer>();
             x.AddConsumer<UserLoginConsumer>();
-            x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host("localhost", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
         });
         return services;
     }

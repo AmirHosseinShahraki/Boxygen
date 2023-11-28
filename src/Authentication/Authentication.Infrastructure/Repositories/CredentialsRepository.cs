@@ -1,0 +1,64 @@
+﻿using Authentication.Domain.Entities;
+using Authentication.Domain.Repositories;
+using Authentication.Infrastructure.Helpers;
+using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Driver;
+
+namespace Authentication.Infrastructure.Repositories;
+
+public class CredentialsRepository : ICredentialRepository
+{
+    private readonly IMongoCollection<Credential> _credentialCollection;
+
+    public CredentialsRepository(IMongoClient mongoClient, IOptions<CredentialDatabaseSettings> credentialDatabaseSettings)
+    {
+        var database = mongoClient.GetDatabase(credentialDatabaseSettings.Value.DatabaseName);
+        _credentialCollection = database.GetCollection<Credential>(credentialDatabaseSettings.Value.CredentialsCollectionName);
+    }
+
+    public async Task<IEnumerable<Credential>> GetAllCredentials()
+    {
+        var users = await _credentialCollection.Find(new BsonDocument()).ToListAsync();
+        return users;
+    }
+
+    public async Task<Credential?> GetCredentialsById(Guid userId)
+    {
+        var user = await _credentialCollection.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        return user;
+    }
+
+    public async Task<Credential?> GetCredentialsByUsername(string username)
+    {
+        var user = await _credentialCollection.Find(u => u.Username == username).FirstOrDefaultAsync();
+        return user;
+    }
+
+    public async Task<bool> CheckUsernameExists(string username)
+    {
+        var count = await _credentialCollection.Find(u => u.Username == username).CountDocumentsAsync();
+        return count != 0;
+    }
+
+    public async Task<Credential> CreateCredentials(Credential credential)
+    {
+        credential.Id = Guid.NewGuid();
+        credential.CreatedAt = DateTime.UtcNow;
+        credential.UpdatedAt = credential.CreatedAt;
+        await _credentialCollection.InsertOneAsync(credential);
+        return credential;
+    }
+
+    public async Task<bool> UpdateCredentials(Guid credentialId, Credential updatedCredential)
+    {
+        var result = await _credentialCollection.ReplaceOneAsync(u => u.Id == credentialId, updatedCredential);
+        return result.IsAcknowledged && result.ModifiedCount > 0;
+    }
+
+    public async Task<bool> DeleteCredentials(Guid credentialId)
+    {
+        var result = await _credentialCollection.DeleteOneAsync(u => u.Id == credentialId);
+        return result.IsAcknowledged && result.DeletedCount > 0;
+    }
+}
