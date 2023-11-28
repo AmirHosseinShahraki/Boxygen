@@ -27,22 +27,23 @@ public static class DependencyInjection
             var userRegistrationDbConfig = configuration.GetSection("UserRegistrationDatabase").Get<UserRegistrationDatabaseConfig>()!;
             var rabbitmqConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>()!;
 
+            var schedulerEndpoint = new Uri("queue:scheduler");
+            x.AddMessageScheduler(schedulerEndpoint);
             x.AddSagaStateMachine<UserRegistrationStateMachine, UserRegistrationState>().MongoDbRepository(r =>
             {
                 r.Connection = userRegistrationDbConfig.ConnectionString;
                 r.DatabaseName = userRegistrationDbConfig.DatabaseName;
                 r.CollectionName = userRegistrationDbConfig.UserRegistrationsCollectionName;
             });
-
             x.SetKebabCaseEndpointNameFormatter();
             x.UsingRabbitMq((context, cfg) =>
             {
+                cfg.UseMessageScheduler(schedulerEndpoint);
                 cfg.Host(rabbitmqConfig.Host, h =>
                 {
                     h.Username(rabbitmqConfig.Username);
                     h.Password(rabbitmqConfig.Password);
                 });
-
                 cfg.ConfigureEndpoints(context);
             });
         });

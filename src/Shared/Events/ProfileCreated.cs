@@ -1,8 +1,8 @@
 ﻿namespace Shared.Events;
 
-public record NewUserRegistered
+public record ProfileCreated
 {
     public Guid Id { get; init; }
     public string Username { get; init; } = null!;
-    public DateTime RegisteredAt { get; init; }
-};
+    public DateTime CreatedAt { get; init; }
+}

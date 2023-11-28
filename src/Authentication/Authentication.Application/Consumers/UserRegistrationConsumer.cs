@@ -40,6 +40,7 @@ public class UserRegistrationConsumer : IConsumer<RegisterUser>
         {
             Id = createdUser.Id,
             Username = context.Message.Username,
+            RegisteredAt = DateTime.UtcNow
         };
         await context.RespondAsync(newUserRegisteredEvent);
         await _bus.Publish(newUserRegisteredEvent);
