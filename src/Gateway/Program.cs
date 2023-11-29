@@ -33,6 +33,6 @@ builder.Services.AddOcelot(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseOcelot();
+await app.UseOcelot();
 
 app.Run();
