@@ -1,14 +1,10 @@
 ﻿using Authentication.Domain.Entities;
+using Shared;
 
 namespace Authentication.Domain.Repositories;
 
-public interface ICredentialRepository
+public interface ICredentialRepository : IBaseRepository<Credential>
 {
-    public Task<IEnumerable<Credential>> GetAllCredentials();
-    public Task<Credential?> GetCredentialsById(Guid userId);
-    public Task<Credential?> GetCredentialsByUsername(string username);
+    public Task<Credential?> GetByUsername(string username);
     public Task<bool> CheckUsernameExists(string username);
-    public Task<Credential> CreateCredentials(Credential credential);
-    public Task<bool> UpdateCredentials(Guid credentialId, Credential updatedCredential);
-    public Task<bool> DeleteCredentials(Guid credentialId);
 }

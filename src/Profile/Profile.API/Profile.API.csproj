@@ -17,4 +17,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Profile.Infrastructure\Profile.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

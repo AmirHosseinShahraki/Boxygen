@@ -20,7 +20,7 @@ public class UserLoginConsumer : IConsumer<LoginUser>
 
     public async Task Consume(ConsumeContext<LoginUser> context)
     {
-        var user = await _credentialRepository.GetCredentialsByUsername(context.Message.Username);
+        var user = await _credentialRepository.GetByUsername(context.Message.Username);
 
         if (user is null || !BC.EnhancedVerify(context.Message.Password, user.Password, HashType.SHA512))
         {

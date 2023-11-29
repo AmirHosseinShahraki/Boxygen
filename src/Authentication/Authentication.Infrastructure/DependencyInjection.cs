@@ -18,8 +18,7 @@ public static class DependencyInjection
             configuration.GetSection("JwtConfiguration"));
 
         services.AddCredentialDatabase(configuration);
-
-        services.AddMassTransit(configuration);
+        services.AddAuthMassTransit(configuration);
 
         services.AddSingleton<ICredentialRepository, CredentialsRepository>();
         services.AddSingleton<IJwtService, JwtService>();

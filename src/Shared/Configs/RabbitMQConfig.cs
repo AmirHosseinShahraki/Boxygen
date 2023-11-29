@@ -1,4 +1,4 @@
-﻿namespace User.Infrastructure.Helpers;
+﻿namespace Shared.Configs;
 
 public record RabbitMQConfig
 {

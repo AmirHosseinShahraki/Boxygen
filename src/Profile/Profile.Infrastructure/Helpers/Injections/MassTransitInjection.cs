@@ -1,22 +1,20 @@
-﻿using Authentication.Application.Consumers;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Profile.Application.Consumers;
 using Shared.Configs;
 
-namespace Authentication.Infrastructure.Helpers.Injections;
+namespace Profile.Infrastructure.Helpers.Injections;
 
-internal static class MassTransitInjection
+public static class MassTransitInjection
 {
-    public static IServiceCollection AddAuthMassTransit(this IServiceCollection services,
+    public static IServiceCollection AddProfileMassTransit(this IServiceCollection services,
         IConfiguration configuration)
     {
         var rabbitmqConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>()!;
-
         services.AddMassTransit(x =>
         {
-            x.AddConsumer<UserRegistrationConsumer>();
-            x.AddConsumer<UserLoginConsumer>();
+            x.AddConsumer<CreateUserProfileConsumer>();
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(rabbitmqConfig.Host, h =>
@@ -24,7 +22,6 @@ internal static class MassTransitInjection
                     h.Username(rabbitmqConfig.Username);
                     h.Password(rabbitmqConfig.Password);
                 });
-
                 cfg.ConfigureEndpoints(context);
             });
         });

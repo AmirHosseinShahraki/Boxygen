@@ -1,10 +1,7 @@
-﻿namespace User.Infrastructure.Helpers;
+﻿using Shared.Configs;
 
-public record UserRegistrationDatabaseConfig
+namespace User.Infrastructure.Helpers;
+
+public record UserRegistrationDatabaseConfig : MongoDbCollectionConfig
 {
-    public string ConnectionString { get; set; } = null!;
-
-    public string DatabaseName { get; set; } = null!;
-
-    public string UserRegistrationsCollectionName { get; set; } = null!;
 }

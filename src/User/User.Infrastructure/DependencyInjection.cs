@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using Shared.Configs;
 using User.Application.StateMachines;
 using User.Domain.States;
 using User.Infrastructure.Helpers;
@@ -33,7 +34,7 @@ public static class DependencyInjection
             {
                 r.Connection = userRegistrationDbConfig.ConnectionString;
                 r.DatabaseName = userRegistrationDbConfig.DatabaseName;
-                r.CollectionName = userRegistrationDbConfig.UserRegistrationsCollectionName;
+                r.CollectionName = userRegistrationDbConfig.CollectionName;
             });
             x.SetKebabCaseEndpointNameFormatter();
             x.UsingRabbitMq((context, cfg) =>
