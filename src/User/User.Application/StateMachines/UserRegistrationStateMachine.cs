@@ -7,25 +7,34 @@ namespace User.Application.StateMachines;
 
 public class UserRegistrationStateMachine : MassTransitStateMachine<UserRegistrationState>
 {
-    public Event<NewUserRegistered> NewUserRegistered { get; private set; } = null!;
-    public Request<UserRegistrationState, CreateProfile, ProfileCreated> CreateProfile { get; private set; } = null!;
+    public State Failed { get; set; } = null!;
+    public Event<NewUserRegistered> NewUserRegistered { get; set; } = null!;
+    public Request<UserRegistrationState, CreateProfile, ProfileCreated> CreateProfile { get; set; } = null!;
 
     public UserRegistrationStateMachine()
     {
         InstanceState(x => x.CurrentState);
 
-        Event(() => NewUserRegistered, x => x.CorrelateById(context => context.Message.Id));
-        Request(() => CreateProfile);
+        Event(() => NewUserRegistered);
+
+        Request(() => CreateProfile, r => { r.Timeout = TimeSpan.FromSeconds(2); });
 
         Initially(
             When(NewUserRegistered)
                 .Then(x => x.Saga.RegisteredAt = x.Message.RegisteredAt)
                 .Request(CreateProfile, context => new CreateProfile
                 {
-                    Id = context.Message.Id,
-                    Username = context.Message.Username
+                    CorrelationId = context.Message.CorrelationId
                 })
                 .TransitionTo(CreateProfile.Pending)
+        );
+        During(CreateProfile.Pending,
+            When(CreateProfile.Completed)
+                .Finalize(),
+            When(CreateProfile.Faulted)
+                .TransitionTo(Failed),
+            When(CreateProfile.TimeoutExpired)
+                .TransitionTo(Failed)
         );
     }
 }

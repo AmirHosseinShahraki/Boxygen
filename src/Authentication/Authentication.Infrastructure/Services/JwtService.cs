@@ -26,13 +26,14 @@ public class JwtService : IJwtService
         _jwtTokenHandler = new JwtSecurityTokenHandler();
     }
 
-    public AuthToken GenerateToken(string username)
+    public AuthToken GenerateToken(Guid id, string username)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
+            new Claim(JwtRegisteredClaimNames.Sub, id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Name, username)
         };
-        var expires = DateTime.UtcNow.Add(_configuration.ExpiryTimeSpan);
+        var expires = DateTime.Now.Add(_configuration.ExpiryTimeSpan);
         var token = new JwtSecurityToken(_configuration.Issuer,
             _configuration.Audience,
             claims,

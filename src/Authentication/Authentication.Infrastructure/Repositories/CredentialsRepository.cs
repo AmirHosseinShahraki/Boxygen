@@ -41,7 +41,7 @@ public class CredentialsRepository : ICredentialRepository
     public async Task<Credential> Create(Credential credential)
     {
         credential.Id = Guid.NewGuid();
-        credential.CreatedAt = DateTime.UtcNow;
+        credential.CreatedAt = DateTime.Now;
         credential.UpdatedAt = credential.CreatedAt;
         await _credentialCollection.InsertOneAsync(credential);
         return credential;

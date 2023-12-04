@@ -31,7 +31,7 @@ public class UserLoginConsumer : IConsumer<LoginUser>
             return;
         }
 
-        var authToken = _jwtService.GenerateToken(user.Username);
+        var authToken = _jwtService.GenerateToken(user.Id, user.Username);
 
         await context.RespondAsync(authToken);
     }

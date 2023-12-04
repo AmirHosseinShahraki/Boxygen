@@ -15,6 +15,7 @@ public static class MassTransitInjection
         services.AddMassTransit(x =>
         {
             x.AddConsumer<CreateUserProfileConsumer>();
+            x.SetKebabCaseEndpointNameFormatter();
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(rabbitmqConfig.Host, h =>

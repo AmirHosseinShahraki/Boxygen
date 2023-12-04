@@ -1,8 +1,10 @@
-﻿namespace Shared.Events;
+﻿using MassTransit;
 
-public record NewUserRegistered
+namespace Shared.Events;
+
+public record NewUserRegistered : CorrelatedBy<Guid>
 {
-    public Guid Id { get; init; }
-    public string Username { get; init; } = null!;
-    public DateTime RegisteredAt { get; init; }
+    public Guid CorrelationId { get; set; }
+    public string Username { get; set; } = null!;
+    public DateTime RegisteredAt { get; set; }
 };

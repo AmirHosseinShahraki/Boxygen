@@ -1,7 +1,8 @@
-﻿namespace Shared.Commands;
+﻿using MassTransit;
 
-public record CreateProfile
+namespace Shared.Commands;
+
+public record CreateProfile : CorrelatedBy<Guid>
 {
-    public Guid Id { get; set; }
-    public string Username { get; set; } = null!;
+    public Guid CorrelationId { get; set; }
 }

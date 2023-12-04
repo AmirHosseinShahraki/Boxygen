@@ -1,27 +1,44 @@
-﻿using Profile.Domain.Entities;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using Profile.Domain.Entities;
 using Profile.Domain.Repositories;
+using Profile.Infrastructure.Helpers;
 
 namespace Profile.Infrastructure.Repositories;
 
 public class UserProfileRepository : IUserProfileRepository
 {
-    public Task<UserProfile?> GetById(Guid id)
+    private readonly IMongoCollection<UserProfile> _userProfileCollection;
+
+    public UserProfileRepository(IMongoClient mongoClient, IOptions<UserProfileDatabaseConfig> userProfileDatabaseConfig)
     {
-        throw new NotImplementedException();
+        var database = mongoClient.GetDatabase(userProfileDatabaseConfig.Value.DatabaseName);
+        _userProfileCollection = database.GetCollection<UserProfile>(userProfileDatabaseConfig.Value.CollectionName);
     }
 
-    public Task<UserProfile> Create(UserProfile entity)
+    public async Task<UserProfile?> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        return await _userProfileCollection.Find(u => u.Id == id).FirstOrDefaultAsync();
     }
 
-    public Task<bool> Update(Guid id, UserProfile updatedEntity)
+    public async Task<UserProfile> Create(UserProfile entity)
     {
-        throw new NotImplementedException();
+        entity.Id = entity.Id;
+        entity.CreatedAt = DateTime.Now;
+        entity.UpdatedAt = entity.CreatedAt;
+        await _userProfileCollection.InsertOneAsync(entity);
+        return entity;
     }
 
-    public Task<bool> Delete(Guid id)
+    public async Task<bool> Update(Guid id, UserProfile updatedEntity)
     {
-        throw new NotImplementedException();
+        var result = await _userProfileCollection.ReplaceOneAsync(u => u.Id == id, updatedEntity);
+        return result.IsAcknowledged && result.ModifiedCount > 0;
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        var result = await _userProfileCollection.DeleteOneAsync(u => u.Id == id);
+        return result.IsAcknowledged && result.DeletedCount > 0;
     }
 }

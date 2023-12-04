@@ -1,8 +1,9 @@
-﻿namespace Shared.Events;
+﻿using MassTransit;
 
-public record ProfileCreated
+namespace Shared.Events;
+
+public record ProfileCreated : CorrelatedBy<Guid>
 {
-    public Guid Id { get; init; }
-    public string Username { get; init; } = null!;
-    public DateTime CreatedAt { get; init; }
+    public Guid CorrelationId { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
