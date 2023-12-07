@@ -8,12 +8,10 @@ namespace Profile.Application.Consumers;
 
 public class CreateUserProfileConsumer : IConsumer<CreateProfile>
 {
-    private readonly IBus _bus;
     private readonly IUserProfileRepository _userProfileRepository;
 
-    public CreateUserProfileConsumer(IBus bus, IUserProfileRepository userProfileRepository)
+    public CreateUserProfileConsumer(IUserProfileRepository userProfileRepository)
     {
-        _bus = bus;
         _userProfileRepository = userProfileRepository;
     }
 

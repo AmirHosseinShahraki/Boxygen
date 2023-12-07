@@ -32,10 +32,9 @@ public class CredentialsRepository : ICredentialRepository
         return await _credentialCollection.Find(u => u.Username == username).FirstOrDefaultAsync();
     }
 
-    public async Task<bool> CheckUsernameExists(string username)
+    public Task<bool> CheckUsernameExists(string username)
     {
-        var count = await _credentialCollection.Find(u => u.Username == username).CountDocumentsAsync();
-        return count != 0;
+        return _credentialCollection.Find(u => u.Username == username).AnyAsync();
     }
 
     public async Task<Credential> Create(Credential credential)

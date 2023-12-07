@@ -34,7 +34,6 @@ public static class DependencyInjection
                     r.DatabaseName = userRegistrationDbConfig.DatabaseName;
                     r.CollectionName = userRegistrationDbConfig.CollectionName;
                 });
-
             x.SetKebabCaseEndpointNameFormatter();
             x.UsingRabbitMq((context, cfg) =>
             {

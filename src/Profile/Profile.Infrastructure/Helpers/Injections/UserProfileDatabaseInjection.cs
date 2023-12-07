@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Profile.Domain.Entities;
 
@@ -16,17 +14,19 @@ public static class UserProfileDatabaseInjection
         services.Configure<UserProfileDatabaseConfig>(options =>
             configuration.GetSection("UserProfileDatabase").Bind(options));
         var userProfileDatabaseConfig = configuration.GetSection("UserProfileDatabase").Get<UserProfileDatabaseConfig>()!;
+
         services.AddSingleton<IMongoClient>(sp =>
         {
             var connectionString = userProfileDatabaseConfig.ConnectionString;
             return new MongoClient(connectionString);
         });
+
         BsonClassMap.RegisterClassMap<UserProfile>(cm =>
         {
             cm.AutoMap();
-            cm.MapIdMember(c => c.Id)
-                .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            cm.MapIdMember(c => c.Id);
         });
+
         return services;
     }
 }

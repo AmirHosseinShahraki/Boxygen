@@ -6,7 +6,8 @@
     {
       "UpstreamPathTemplate": "/gateway/profile",
       "UpstreamHttpMethod": [
-        "Get"
+        "Get",
+        "Post"
       ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",

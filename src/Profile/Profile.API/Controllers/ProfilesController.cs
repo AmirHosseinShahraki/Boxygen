@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Mvc;
+using Profile.Domain.Entities;
+using Profile.Domain.Messages;
+using Profile.Domain.Queries;
 
 namespace Profile.API.Controllers;
 
@@ -6,12 +10,27 @@ namespace Profile.API.Controllers;
 [Route("[controller]")]
 public class ProfilesController : ControllerBase
 {
-    [HttpGet("{userId}")]
-    public IActionResult Get([FromRoute] string userId)
+    private readonly IRequestClient<GetUserProfile> _getUserProfileClient;
+
+    public ProfilesController(IRequestClient<GetUserProfile> getUserProfileClient)
     {
-        return Ok(new
+        _getUserProfileClient = getUserProfileClient;
+    }
+
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> Get([FromRoute] Guid userId)
+    {
+        var getUserProfileQuery = new GetUserProfile()
         {
-            Username = userId
-        });
+            Id = userId
+        };
+        Response response = await _getUserProfileClient.GetResponse<UserProfile, UserProfileNotFound>(getUserProfileQuery);
+
+        return response switch
+        {
+            (_, UserProfile registeredUser) => Ok(registeredUser),
+            (_, UserProfileNotFound) => NotFound(),
+            _ => throw new InvalidOperationException()
+        };
     }
 }
