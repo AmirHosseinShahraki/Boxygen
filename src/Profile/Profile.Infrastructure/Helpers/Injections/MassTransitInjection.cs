@@ -16,6 +16,7 @@ public static class MassTransitInjection
         {
             x.AddConsumer<CreateUserProfileConsumer>();
             x.AddConsumer<GetUserProfileConsumer>();
+            x.AddConsumer<UpdateUserProfileConsumer>();
             x.SetKebabCaseEndpointNameFormatter();
             x.UsingRabbitMq((context, cfg) =>
             {
