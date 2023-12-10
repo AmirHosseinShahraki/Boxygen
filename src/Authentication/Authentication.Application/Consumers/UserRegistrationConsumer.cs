@@ -30,13 +30,13 @@ public class UserRegistrationConsumer : IConsumer<RegisterUser>
         }
 
         var hashedPassword = BC.EnhancedHashPassword(context.Message.Password, HashType.SHA512);
-        var createdUser = await _credentialRepository.Create(new Credential()
+        var createdUser = await _credentialRepository.Create(new Credential
         {
             Username = context.Message.Username,
             Password = hashedPassword
         });
 
-        var newUserRegisteredEvent = new NewUserRegistered()
+        var newUserRegisteredEvent = new NewUserRegistered
         {
             CorrelationId = createdUser.Id,
             Username = context.Message.Username,

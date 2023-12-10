@@ -2,8 +2,6 @@
 
 namespace Profile.Domain.Commands;
 
-public record UpdateUserProfile
+public class UpdateUserProfile : SubmitUserProfile
 {
-    public Guid UserProfileId { get; set; }
-    public UserProfile Profile = null!;
-};
+}

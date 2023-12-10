@@ -1,10 +1,10 @@
 ﻿using Authentication.API.DTOs;
 using Authentication.Domain.Commands;
 using Authentication.Domain.Messages;
-using Shared.Events;
 using AutoMapper;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Events;
 
 namespace Authentication.API.Controllers;
 

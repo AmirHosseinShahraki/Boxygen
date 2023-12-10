@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Profile.Application.Utilities;
 using Profile.Domain.Repositories;
 using Profile.Infrastructure.Helpers.Injections;
 using Profile.Infrastructure.Repositories;
@@ -14,7 +15,7 @@ public static class DependencyInjection
         services.AddUserProfileDatabase(configuration);
         services.AddProfileMassTransit(configuration);
         services.AddSingleton<IUserProfileRepository, UserProfileRepository>();
-
+        services.AddAutoMapper(typeof(ApplicationAutoMapperProfile));
         return services;
     }
 }

@@ -27,7 +27,7 @@ public class ProfilesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get([FromRoute] Guid userId)
     {
-        var getUserProfileQuery = new GetUserProfile()
+        var getUserProfileQuery = new GetUserProfile
         {
             Id = userId
         };
@@ -42,16 +42,35 @@ public class ProfilesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update([FromRoute] Guid userId, [FromBody] UpdateUserProfileDto updateUserProfileDto)
+    public async Task<IActionResult> Submit([FromRoute] Guid userId, [FromBody] SubmitUserProfileDto submitUserProfileDto)
     {
-        var toBeUpdateUserProfile = _mapper.Map<UserProfile>(updateUserProfileDto);
-        var updateUserProfileCommand = new UpdateUserProfile()
+        var toBeUpdateUserProfile = _mapper.Map<UserProfile>(submitUserProfileDto);
+        var updateUserProfileCommand = new UpdateUserProfile
         {
             UserProfileId = userId,
             Profile = toBeUpdateUserProfile
         };
         Response response = await _updateUserProfileClient.GetResponse<UserProfile, UserProfileNotFound>(updateUserProfileCommand);
-
+    
+        return response switch
+        {
+            (_, UserProfile registeredUser) => Ok(registeredUser),
+            (_, UserProfileNotFound) => NotFound(),
+            _ => throw new InvalidOperationException()
+        };
+    }
+    
+    [HttpPatch]
+    public async Task<IActionResult> Update([FromRoute] Guid userId, [FromBody] UpdateUserProfileDto updateUserProfileDto)
+    {
+        var toBeUpdateUserProfile = _mapper.Map<UserProfile>(updateUserProfileDto);
+        var updateUserProfileCommand = new UpdateUserProfile
+        {
+            UserProfileId = userId,
+            Profile = toBeUpdateUserProfile
+        };
+        Response response = await _updateUserProfileClient.GetResponse<UserProfile, UserProfileNotFound>(updateUserProfileCommand);
+    
         return response switch
         {
             (_, UserProfile registeredUser) => Ok(registeredUser),

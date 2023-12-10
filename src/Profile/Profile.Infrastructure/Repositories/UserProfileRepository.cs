@@ -32,6 +32,7 @@ public class UserProfileRepository : IUserProfileRepository
 
     public async Task<bool> Update(Guid id, UserProfile updatedEntity)
     {
+        updatedEntity.Id = id;
         var result = await _userProfileCollection.ReplaceOneAsync(u => u.Id == id, updatedEntity);
         return result.IsAcknowledged && result.ModifiedCount > 0;
     }

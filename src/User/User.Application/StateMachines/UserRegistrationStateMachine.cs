@@ -21,6 +21,10 @@ public class UserRegistrationStateMachine : MassTransitStateMachine<UserRegistra
         {
             r.Timeout = TimeSpan.Zero;
         });
+        Request(() => VerifyPhone, r =>
+        {
+            r.Timeout = TimeSpan.Zero;
+        });
 
         Initially(
             When(NewUserRegistered)
@@ -31,38 +35,46 @@ public class UserRegistrationStateMachine : MassTransitStateMachine<UserRegistra
                 })
                 .TransitionTo(CreateProfile.Pending)
         );
+
         During(CreateProfile.Pending,
             When(CreateProfile.Completed)
-                .TransitionTo(ProfilePendingSubmission),
-            When(CreateProfile.Faulted)
-                .TransitionTo(Failed),
-            When(CreateProfile.TimeoutExpired)
-                .TransitionTo(Failed)
+                .TransitionTo(ProfilePendingSubmission)
         );
+
         During(ProfilePendingSubmission,
             When(ProfileSubmitted)
-                .Request(VerifyEmail, context => new SendVerificationEmail()
+                .Request(VerifyEmail, context => new SendVerificationEmail
                 {
+                    CorrelationId = context.Message.CorrelationId,
                     Email = context.Message.Email,
                     FullName = context.Message.FullName
                 })
-                .TransitionTo(VerifyEmail.Pending)
+                .Request(VerifyPhone, context => new SendVerificationSms
+                {
+                    CorrelationId = context.Message.CorrelationId,
+                    Phone = context.Message.Phone
+                })
+                .TransitionTo(Verification)
         );
-        During(VerifyEmail.Pending,
-            When(VerifyEmail.Completed)
-                .TransitionTo(Verified),
-            When(VerifyEmail.Faulted)
-                .TransitionTo(Failed),
-            When(VerifyEmail.TimeoutExpired)
-                .TransitionTo(Failed)
+
+        During(Verification,
+            When(UserVerified)
+                .TransitionTo(Verified)
         );
+
+        CompositeEvent(() => UserVerified, state => state.VerificationStatus, VerifyEmail.Completed, VerifyPhone.Completed);
     }
 
     public State ProfilePendingSubmission { get; set; } = null!;
+    public State Verification { get; set; } = null!;
     public State Verified { get; set; } = null!;
     public State Failed { get; set; } = null!;
+
     public Event<NewUserRegistered> NewUserRegistered { get; set; } = null!;
     public Event<ProfileSubmitted> ProfileSubmitted { get; set; } = null!;
+    public Event UserVerified { get; private set; } = null!;
+
     public Request<UserRegistrationState, CreateProfile, ProfileCreated> CreateProfile { get; set; } = null!;
     public Request<UserRegistrationState, SendVerificationEmail, EmailVerified> VerifyEmail { get; set; } = null!;
+    public Request<UserRegistrationState, SendVerificationSms, PhoneVerified> VerifyPhone { get; set; } = null!;
 }

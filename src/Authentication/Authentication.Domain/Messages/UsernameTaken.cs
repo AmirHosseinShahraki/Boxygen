@@ -1,3 +1,3 @@
 ﻿namespace Authentication.Domain.Messages;
 
-public record UsernameTaken();
+public record UsernameTaken;

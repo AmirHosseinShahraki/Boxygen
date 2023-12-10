@@ -20,7 +20,7 @@ builder.Services
         var publicKey = builder.Configuration.GetValue<string>("JwtConfiguration:PublicKey");
         var rsa = RSA.Create();
         rsa.ImportFromPem(publicKey.ToCharArray());
-        options.TokenValidationParameters = new TokenValidationParameters()
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false,
             ValidateIssuer = false,

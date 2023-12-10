@@ -24,7 +24,7 @@ public class UserLoginConsumer : IConsumer<LoginUser>
 
         if (user is null || !BC.EnhancedVerify(context.Message.Password, user.Password, HashType.SHA512))
         {
-            await context.RespondAsync(new AuthFailed()
+            await context.RespondAsync(new AuthFailed
             {
                 Username = context.Message.Username
             });

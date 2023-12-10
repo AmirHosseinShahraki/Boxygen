@@ -6,6 +6,6 @@ public class PhoneUpdatedCommand : IProfileUpdatedCommand
 {
     public Task ExecuteAsync(UserProfile userProfile, UserProfile toBeUpdateProfile)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 }

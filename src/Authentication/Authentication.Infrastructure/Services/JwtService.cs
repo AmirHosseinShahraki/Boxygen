@@ -40,7 +40,7 @@ public class JwtService : IJwtService
             expires: expires,
             signingCredentials: _credentials);
 
-        return new AuthToken()
+        return new AuthToken
         {
             AccessToken = _jwtTokenHandler.WriteToken(token),
             ExpiresAt = expires

@@ -15,6 +15,7 @@ public static class MassTransitInjection
         services.AddMassTransit(x =>
         {
             x.AddConsumer<CreateUserProfileConsumer>();
+            x.AddConsumer<SubmitUserProfileConsumer>();
             x.AddConsumer<GetUserProfileConsumer>();
             x.AddConsumer<UpdateUserProfileConsumer>();
             x.SetKebabCaseEndpointNameFormatter();

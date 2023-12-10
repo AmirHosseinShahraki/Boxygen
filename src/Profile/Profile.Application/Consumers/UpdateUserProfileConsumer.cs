@@ -23,15 +23,19 @@ public class UpdateUserProfileConsumer : IConsumer<UpdateUserProfile>
     public async Task Consume(ConsumeContext<UpdateUserProfile> context)
     {
         var toBeUpdateProfile = context.Message.Profile;
-        var userProfile = await _userProfileRepository.GetById(context.Message.UserProfileId);
+        var id = context.Message.UserProfileId;
+        var userProfile = await _userProfileRepository.GetById(id);
         if (userProfile is null)
         {
-            await context.RespondAsync(new UserProfileNotFound { Id = toBeUpdateProfile.Id });
+            await context.RespondAsync(new UserProfileNotFound { Id = id });
             return;
         }
 
         var updatedProfile = _mapper.Map(toBeUpdateProfile, userProfile);
-        await _userProfileRepository.Update(context.Message.UserProfileId, updatedProfile);
+        updatedProfile.UpdatedAt = DateTime.Now;
+        await _userProfileRepository.Update(id, updatedProfile);
+
+        await context.RespondAsync(updatedProfile);
 
         await _updatedCommandInvoker.ExecuteCommands(userProfile, updatedProfile);
     }
