@@ -21,10 +21,6 @@ public class UserRegistrationStateMachine : MassTransitStateMachine<UserRegistra
         {
             r.Timeout = TimeSpan.Zero;
         });
-        Request(() => VerifyPhone, r =>
-        {
-            r.Timeout = TimeSpan.Zero;
-        });
 
         Initially(
             When(NewUserRegistered)
@@ -49,20 +45,13 @@ public class UserRegistrationStateMachine : MassTransitStateMachine<UserRegistra
                     Email = context.Message.Email,
                     FullName = context.Message.FullName
                 })
-                .Request(VerifyPhone, context => new SendVerificationSms
-                {
-                    CorrelationId = context.Message.CorrelationId,
-                    Phone = context.Message.Phone
-                })
                 .TransitionTo(Verification)
         );
 
         During(Verification,
-            When(UserVerified)
+            When(VerifyEmail.Completed)
                 .TransitionTo(Verified)
         );
-
-        CompositeEvent(() => UserVerified, state => state.VerificationStatus, VerifyEmail.Completed, VerifyPhone.Completed);
     }
 
     public State ProfilePendingSubmission { get; set; } = null!;
@@ -72,9 +61,7 @@ public class UserRegistrationStateMachine : MassTransitStateMachine<UserRegistra
 
     public Event<NewUserRegistered> NewUserRegistered { get; set; } = null!;
     public Event<ProfileSubmitted> ProfileSubmitted { get; set; } = null!;
-    public Event UserVerified { get; private set; } = null!;
 
     public Request<UserRegistrationState, CreateProfile, ProfileCreated> CreateProfile { get; set; } = null!;
     public Request<UserRegistrationState, SendVerificationEmail, EmailVerified> VerifyEmail { get; set; } = null!;
-    public Request<UserRegistrationState, SendVerificationSms, PhoneVerified> VerifyPhone { get; set; } = null!;
 }
