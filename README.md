@@ -1,6 +1,6 @@
 # Boxygen - Secure Cloud File Storage
 
-A **Secure Cloud File Storage** solution utilizing a **microservice architecture** and **event-driven design**. It’s built using .NET and leverages **MassTransit** for messaging with **RabbitMQ** as the transport. **Ocelot** is used to implement the API Gateway pattern, providing a unified entry point to the backend services. Each service within the architecture adheres strictly to **Clean Architecture** principles.
+A **Secure Cloud File Storage** solution utilizing a **microservice architecture** and **event-driven design**. It’s built using .NET and leverages **MassTransit** for messaging with **RabbitMQ** as the transport. **Ocelot** is used to implement the API Gateway pattern. Each service within the architecture adheres strictly to **Clean Architecture** principles.
 
 ## Architecture
 The system is composed of multiple services, each with a specific role:
