@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MassTransit;
-using Profile.Application.Commands;
 using Profile.Domain.Commands;
 using Profile.Domain.Messages;
 using Profile.Domain.Repositories;
@@ -23,7 +22,7 @@ public class SubmitUserProfileConsumer : IConsumer<SubmitUserProfile>
 
     public async Task Consume(ConsumeContext<SubmitUserProfile> context)
     {
-        var profile = context.Message.Profile;
+        var toBeSubmitProfile = context.Message.Profile;
         var id = context.Message.UserProfileId;
 
         var userProfile = await _userProfileRepository.GetById(id);
@@ -32,12 +31,13 @@ public class SubmitUserProfileConsumer : IConsumer<SubmitUserProfile>
             await context.RespondAsync(new UserProfileNotFound { Id = id });
             return;
         }
-        
-        await _userProfileRepository.Update(id, profile);
 
-        await context.RespondAsync(userProfile);
+        var submittedProfile = _mapper.Map(toBeSubmitProfile, userProfile);
+        await _userProfileRepository.Update(id, submittedProfile);
 
-        var profileSubmittedEvent = _mapper.Map<ProfileSubmitted>(userProfile);
+        await context.RespondAsync(submittedProfile);
+
+        var profileSubmittedEvent = _mapper.Map<ProfileSubmitted>(submittedProfile);
         await _bus.Publish(profileSubmittedEvent);
     }
 }

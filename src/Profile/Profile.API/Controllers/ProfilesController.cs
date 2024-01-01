@@ -15,12 +15,14 @@ public class ProfilesController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IRequestClient<GetUserProfile> _getUserProfileClient;
+    private readonly IRequestClient<SubmitUserProfile> _submitUserProfileClient;
     private readonly IRequestClient<UpdateUserProfile> _updateUserProfileClient;
 
-    public ProfilesController(IMapper mapper, IRequestClient<GetUserProfile> getUserProfileClient, IRequestClient<UpdateUserProfile> updateUserProfileClient)
+    public ProfilesController(IMapper mapper, IRequestClient<GetUserProfile> getUserProfileClient,IRequestClient<SubmitUserProfile> submitUserProfileClient ,IRequestClient<UpdateUserProfile> updateUserProfileClient)
     {
         _mapper = mapper;
         _getUserProfileClient = getUserProfileClient;
+        _submitUserProfileClient = submitUserProfileClient;
         _updateUserProfileClient = updateUserProfileClient;
     }
 
@@ -45,16 +47,15 @@ public class ProfilesController : ControllerBase
     public async Task<IActionResult> Submit([FromRoute] Guid userId, [FromBody] SubmitUserProfileDto submitUserProfileDto)
     {
         var toBeUpdateUserProfile = _mapper.Map<UserProfile>(submitUserProfileDto);
-        var updateUserProfileCommand = new UpdateUserProfile
+        var submitUserProfileCommand = new SubmitUserProfile()
         {
             UserProfileId = userId,
             Profile = toBeUpdateUserProfile
         };
-        Response response = await _updateUserProfileClient.GetResponse<UserProfile, UserProfileNotFound>(updateUserProfileCommand);
-    
+        Response response = await _submitUserProfileClient.GetResponse<UserProfile, UserProfileNotFound>(submitUserProfileCommand);
         return response switch
         {
-            (_, UserProfile registeredUser) => Ok(registeredUser),
+            (_, UserProfile profile) => Ok(profile),
             (_, UserProfileNotFound) => NotFound(),
             _ => throw new InvalidOperationException()
         };
@@ -73,7 +74,7 @@ public class ProfilesController : ControllerBase
     
         return response switch
         {
-            (_, UserProfile registeredUser) => Ok(registeredUser),
+            (_, UserProfile profile) => Ok(profile),
             (_, UserProfileNotFound) => NotFound(),
             _ => throw new InvalidOperationException()
         };
