@@ -17,8 +17,6 @@ The system is composed of multiple services, each with a specific role:
 
 **Preferences Service:** Manages user preferences for UI
 
-Each service uses Event-Driven Architecture to communicate.
-
 ## Features
 
 **Microservice Architecture:** Each service is developed and deployed independently.
