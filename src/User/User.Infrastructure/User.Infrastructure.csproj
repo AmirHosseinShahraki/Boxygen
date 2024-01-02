@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="DotNetEnv" Version="2.5.0" />
       <PackageReference Include="Hangfire.AspNetCore" Version="1.8.6" />
       <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.0" />
       <PackageReference Include="MassTransit" Version="8.1.2" />

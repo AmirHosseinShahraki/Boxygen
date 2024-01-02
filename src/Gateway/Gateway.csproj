@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="DotNetEnv" Version="2.5.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
       <PackageReference Include="Ocelot" Version="21.0.0" />
     </ItemGroup>

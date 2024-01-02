@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="DotNetEnv" Version="2.5.0" />
       <PackageReference Include="MassTransit" Version="8.1.2" />
       <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.2" />
       <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
