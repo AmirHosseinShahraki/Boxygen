@@ -9,8 +9,9 @@ if (builder.Environment.IsDevelopment())
     Env.Load();
 }
 
-// Add services to the container.
 builder.Configuration.AddEnvironmentVariables();
+
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
