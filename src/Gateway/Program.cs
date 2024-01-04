@@ -1,10 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
+using DotNetEnv;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsDevelopment())
+{
+    Env.Load();
+}
+
+builder.Configuration.AddEnvironmentVariables();
+
 var environmentName = builder.Environment.EnvironmentName;
 builder.Configuration.AddJsonFile(
     $"ocelot.{environmentName}.json",
