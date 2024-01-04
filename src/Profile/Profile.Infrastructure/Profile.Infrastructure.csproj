@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+        <PackageReference Include="DotNetEnv" Version="2.5.0" />
         <PackageReference Include="MassTransit" Version="8.1.2" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.2" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
