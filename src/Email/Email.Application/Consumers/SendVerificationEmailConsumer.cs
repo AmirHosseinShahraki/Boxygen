@@ -6,18 +6,17 @@ namespace Email.Application.Consumers;
 
 public class SendVerificationEmailConsumer : IConsumer<SendVerificationEmail>
 {
-    private readonly IFluentEmailFactory _emailFactory;
+    private readonly IFluentEmail _fluentEmail;
 
-    public SendVerificationEmailConsumer(IFluentEmailFactory emailFactory)
+    public SendVerificationEmailConsumer(IFluentEmail fluentEmail)
     {
-        _emailFactory = emailFactory;
+        _fluentEmail = fluentEmail;
     }
 
     public async Task Consume(ConsumeContext<SendVerificationEmail> context)
     {
         var emailAddress = context.Message.Email;
-        var email = _emailFactory
-            .Create()
+        var email = _fluentEmail
             .To(emailAddress)
             .Subject("Email Verification")
             .Body("Please click the link below to verify your email address");
