@@ -1,4 +1,5 @@
 using DotNetEnv;
+using Email.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Configuration.AddEnvironmentVariables();
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
