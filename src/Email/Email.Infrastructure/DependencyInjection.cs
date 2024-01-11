@@ -11,9 +11,6 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         var smtpConfig = configuration.GetSection("SMTP").Get<SMTPConfig>()!;
-        services.AddFluentEmail(smtpConfig.DefaultFrom, smtpConfig.DefaultName)
-            .AddHandlebarsRenderer()
-            .AddSmtpSender(smtpConfig.Host, smtpConfig.Port, smtpConfig.Username, smtpConfig.Password);
 
         services.AddEmailMassTransit(configuration);
 
