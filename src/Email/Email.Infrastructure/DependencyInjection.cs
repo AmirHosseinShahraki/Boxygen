@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.Configure<TemplatesConfig>(configuration.GetSection("Templates"));
 
         services.AddSingleton<ITemplateProvider, TemplateProvider>();
+        services.AddSingleton<IEmailService, EmailService>();
 
         services.AddEmailMassTransit(configuration);
 

@@ -11,7 +11,7 @@ public static class MassTransitInjection
     public static IServiceCollection AddEmailMassTransit(this IServiceCollection services,
         IConfiguration configuration)
     {
-        RabbitMQConfig rabbitmqConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>()!;
+        var rabbitmqConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>()!;
         services.AddMassTransit(x =>
         {
             x.AddConsumer<SendVerificationEmailConsumer>();

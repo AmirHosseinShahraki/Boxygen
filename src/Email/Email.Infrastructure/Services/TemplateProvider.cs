@@ -12,10 +12,11 @@ public class TemplateProvider : ITemplateProvider
 
     public TemplateProvider(IOptions<TemplatesConfig> configuration)
     {
-        TemplatesConfig templatesConfig = configuration.Value;
+        var templatesConfig = configuration.Value;
         foreach (Template template in Enum.GetValues(typeof(Template)))
         {
-            string templateText = File.ReadAllText(Path.Combine(templatesConfig.Path, nameof(template)));
+            string templateText = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                templatesConfig.Path, template + ".hbs"));
             var compiledTemplate = Handlebars.Compile(templateText);
             _compiledTemplates.Add(template, compiledTemplate);
         }
