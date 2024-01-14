@@ -1,5 +1,7 @@
-﻿using Email.Infrastructure.Helpers;
+﻿using Email.Application.Services;
+using Email.Infrastructure.Helpers;
 using Email.Infrastructure.Helpers.Injections;
+using Email.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,10 +12,10 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        var smtpConfig = configuration.GetSection("SMTP").Get<SMTPConfig>()!;
-        services.AddFluentEmail(smtpConfig.DefaultFrom, smtpConfig.DefaultName)
-            .AddHandlebarsRenderer()
-            .AddSmtpSender(smtpConfig.Host, smtpConfig.Port, smtpConfig.Username, smtpConfig.Password);
+        services.Configure<SMTPConfig>(configuration.GetSection("SMTP"));
+        services.Configure<TemplatesConfig>(configuration.GetSection("Templates"));
+
+        services.AddSingleton<ITemplateProvider, TemplateProvider>();
 
         services.AddEmailMassTransit(configuration);
 
