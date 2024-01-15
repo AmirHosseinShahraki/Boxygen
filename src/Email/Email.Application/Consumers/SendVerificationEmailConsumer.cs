@@ -1,4 +1,5 @@
 ﻿using Email.Application.Services;
+using Email.Application.Services.Interfaces;
 using Email.Domain.Enums;
 using MassTransit;
 using Shared.Commands;

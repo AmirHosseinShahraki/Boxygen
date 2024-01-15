@@ -1,4 +1,5 @@
 ﻿using Email.Application.Services;
+using Email.Application.Services.Interfaces;
 using Email.Domain.Enums;
 using Email.Infrastructure.Helpers;
 using Microsoft.Extensions.Options;
@@ -6,11 +7,11 @@ using HandlebarsDotNet;
 
 namespace Email.Infrastructure.Services;
 
-public class TemplateProvider : ITemplateProvider
+public class HandlebarsTemplateProvider : ITemplateProvider
 {
     private readonly Dictionary<Template, HandlebarsTemplate<object, object>> _compiledTemplates = new();
 
-    public TemplateProvider(IOptions<TemplatesConfig> configuration)
+    public HandlebarsTemplateProvider(IOptions<TemplatesConfig> configuration)
     {
         var templatesConfig = configuration.Value;
         foreach (Template template in Enum.GetValues(typeof(Template)))

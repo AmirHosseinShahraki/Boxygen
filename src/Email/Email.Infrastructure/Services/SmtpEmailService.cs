@@ -1,4 +1,5 @@
 ﻿using Email.Application.Services;
+using Email.Application.Services.Interfaces;
 using Email.Infrastructure.Helpers;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
@@ -7,12 +8,12 @@ using MimeKit.Text;
 
 namespace Email.Infrastructure.Services;
 
-public class EmailService : IEmailService
+public class SmtpEmailService : IEmailService
 {
-    private readonly SMTPConfig _smtpConfig;
+    private readonly SmtpConfig _smtpConfig;
     private readonly SmtpClient _client = new();
 
-    public EmailService(IOptions<SMTPConfig> configuration)
+    public SmtpEmailService(IOptions<SmtpConfig> configuration)
     {
         _smtpConfig = configuration.Value;
 
