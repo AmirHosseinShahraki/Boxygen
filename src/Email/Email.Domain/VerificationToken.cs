@@ -1,8 +1,8 @@
 ﻿namespace Email.Domain;
 
-public class EmailVerification
+public class VerificationToken
 {
-    public EmailVerification(string emailAddress, string token, TimeSpan? expiryDuration = null)
+    public VerificationToken(string emailAddress, string token, TimeSpan? expiryDuration = null)
     {
         EmailAddress = emailAddress;
         Token = token;
