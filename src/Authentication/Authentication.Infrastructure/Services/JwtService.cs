@@ -19,22 +19,22 @@ public class JwtService : IJwtService
     {
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         _configuration = configuration.Value;
-        var rsa = RSA.Create();
+        RSA rsa = RSA.Create();
         rsa.ImportFromPem(_configuration.PrivateKey.ToCharArray());
-        var securityKey = new RsaSecurityKey(rsa);
+        RsaSecurityKey securityKey = new(rsa);
         _credentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512);
         _jwtTokenHandler = new JwtSecurityTokenHandler();
     }
 
     public AuthToken GenerateToken(Guid id, string username)
     {
-        var claims = new[]
+        Claim[] claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, id.ToString()),
             new Claim(JwtRegisteredClaimNames.Name, username)
         };
-        var expires = DateTime.Now.Add(_configuration.ExpiryTimeSpan);
-        var token = new JwtSecurityToken(_configuration.Issuer,
+        DateTime expires = DateTime.Now.Add(_configuration.ExpiryTimeSpan);
+        JwtSecurityToken token = new(_configuration.Issuer,
             _configuration.Audience,
             claims,
             expires: expires,

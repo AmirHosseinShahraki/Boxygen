@@ -11,7 +11,7 @@ public static class MassTransitInjection
     public static IServiceCollection AddProfileMassTransit(this IServiceCollection services,
         IConfiguration configuration)
     {
-        var rabbitmqConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>()!;
+        RabbitMQConfig rabbitmqConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>()!;
         services.AddMassTransit(x =>
         {
             x.AddConsumer<CreateUserProfileConsumer>();

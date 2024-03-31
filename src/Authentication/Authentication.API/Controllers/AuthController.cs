@@ -24,7 +24,7 @@ public class AuthController : ApiControllerBase
     [Route("register")]
     public async Task<IActionResult> Register(RegistrationDto registrationDto)
     {
-        var registerUserCommand = Mapper.Map<RegisterUser>(registrationDto);
+        RegisterUser? registerUserCommand = Mapper.Map<RegisterUser>(registrationDto);
         Response response = await _registrationClient.GetResponse<NewUserRegistered, UsernameTaken>(registerUserCommand);
 
         return response switch
@@ -39,7 +39,7 @@ public class AuthController : ApiControllerBase
     [Route("login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
-        var loginUserCommand = Mapper.Map<LoginUser>(loginDto);
+        LoginUser? loginUserCommand = Mapper.Map<LoginUser>(loginDto);
         Response response = await _loginClient.GetResponse<AuthToken, AuthFailed>(loginUserCommand);
 
         return response switch

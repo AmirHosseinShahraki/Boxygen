@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 if (builder.Environment.IsDevelopment())
 {
@@ -14,7 +14,7 @@ if (builder.Environment.IsDevelopment())
 
 builder.Configuration.AddEnvironmentVariables();
 
-var environmentName = builder.Environment.EnvironmentName;
+string? environmentName = builder.Environment.EnvironmentName;
 builder.Configuration.AddJsonFile(
     $"ocelot.{environmentName}.json",
     optional: false,
@@ -26,8 +26,8 @@ builder.Services
     .AddAuthentication()
     .AddJwtBearer(options =>
     {
-        var publicKey = builder.Configuration.GetValue<string>("JwtConfiguration:PublicKey");
-        var rsa = RSA.Create();
+        string? publicKey = builder.Configuration.GetValue<string>("JwtConfiguration:PublicKey");
+        RSA rsa = RSA.Create();
         rsa.ImportFromPem(publicKey.ToCharArray());
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -40,7 +40,7 @@ builder.Services
 
 builder.Services.AddOcelot(builder.Configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 await app.UseOcelot();
 

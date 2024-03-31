@@ -23,7 +23,7 @@ public class SmtpEmailService : IEmailService
 
     public async Task Send(string to, string subject, string body)
     {
-        var message = new MimeMessage();
+        MimeMessage message = new();
         message.From.Add(new MailboxAddress(_smtpConfig.DefaultName, _smtpConfig.DefaultFrom));
         message.To.Add(new MailboxAddress(null, to));
         message.Subject = subject;

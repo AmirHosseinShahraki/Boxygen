@@ -13,11 +13,11 @@ internal static class CredentialDatabaseInjection
     {
         services.Configure<CredentialDatabaseSettings>(options =>
             configuration.GetSection("CredentialDatabaseSettings").Bind(options));
-        var credentialDatabaseSettings = configuration.GetSection("CredentialDatabaseSettings").Get<CredentialDatabaseSettings>()!;
+        CredentialDatabaseSettings credentialDatabaseSettings = configuration.GetSection("CredentialDatabaseSettings").Get<CredentialDatabaseSettings>()!;
 
         services.AddSingleton<IMongoClient>(sp =>
         {
-            var connectionString = credentialDatabaseSettings.ConnectionString;
+            string connectionString = credentialDatabaseSettings.ConnectionString;
             return new MongoClient(connectionString);
         });
 

@@ -1,4 +1,5 @@
 ﻿using Email.Application.Services.Interfaces;
+using Email.Domain;
 using Email.Domain.Enums;
 using MassTransit;
 using Shared.Commands;
@@ -21,8 +22,8 @@ public class SendVerificationEmailConsumer : IConsumer<SendVerificationEmail>
 
     public async Task Consume(ConsumeContext<SendVerificationEmail> context)
     {
-        var verificationToken = await _verificationTokenManager.Generate(context.Message.Email);
-        string emailContent = _templateProvider.Render(Template.Verification, new
+        VerificationToken verificationToken = await _verificationTokenManager.Generate(context.Message.Email);
+        string emailContent = _templateProvider.Render(Templates.Verification, new
         {
             context.Message.FullName,
             verificationToken.EmailAddress,

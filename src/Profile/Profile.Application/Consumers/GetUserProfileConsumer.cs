@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Profile.Domain.Entities;
 using Profile.Domain.Messages;
 using Profile.Domain.Queries;
 using Profile.Domain.Repositories;
@@ -16,8 +17,8 @@ public class GetUserProfileConsumer : IConsumer<GetUserProfile>
 
     public async Task Consume(ConsumeContext<GetUserProfile> context)
     {
-        var userProfileId = context.Message.Id;
-        var userProfile = await _userProfileRepository.GetById(userProfileId);
+        Guid userProfileId = context.Message.Id;
+        UserProfile? userProfile = await _userProfileRepository.GetById(userProfileId);
 
         if (userProfile is null)
         {

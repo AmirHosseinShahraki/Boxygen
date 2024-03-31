@@ -17,9 +17,9 @@ public class VerificationTokenManager : IVerificationTokenManager
     public async Task<VerificationToken> Generate(string email)
     {
         string token = _tokenGenerator.Generate(32);
-        var expirationTimeSpan = TimeSpan.FromMinutes(20);
+        TimeSpan expirationTimeSpan = TimeSpan.FromMinutes(20);
 
-        var verificationToken = new VerificationToken(email, token, expirationTimeSpan);
+        VerificationToken verificationToken = new(email, token, expirationTimeSpan);
 
         await _cacheManager.Add(token, verificationToken, expirationTimeSpan);
         return verificationToken;

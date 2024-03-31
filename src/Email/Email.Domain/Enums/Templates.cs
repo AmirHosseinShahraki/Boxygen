@@ -1,6 +1,6 @@
 ﻿namespace Email.Domain.Enums;
 
-public enum Template
+public enum Templates
 {
     Verification
 }

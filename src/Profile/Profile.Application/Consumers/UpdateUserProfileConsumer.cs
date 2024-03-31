@@ -2,6 +2,7 @@
 using MassTransit;
 using Profile.Application.Commands;
 using Profile.Domain.Commands;
+using Profile.Domain.Entities;
 using Profile.Domain.Messages;
 using Profile.Domain.Repositories;
 
@@ -22,16 +23,16 @@ public class UpdateUserProfileConsumer : IConsumer<UpdateUserProfile>
 
     public async Task Consume(ConsumeContext<UpdateUserProfile> context)
     {
-        var toBeUpdateProfile = context.Message.Profile;
-        var id = context.Message.UserProfileId;
-        var userProfile = await _userProfileRepository.GetById(id);
+        UserProfile toBeUpdateProfile = context.Message.Profile;
+        Guid id = context.Message.UserProfileId;
+        UserProfile? userProfile = await _userProfileRepository.GetById(id);
         if (userProfile is null)
         {
             await context.RespondAsync(new UserProfileNotFound { Id = id });
             return;
         }
 
-        var updatedProfile = _mapper.Map(toBeUpdateProfile, userProfile);
+        UserProfile updatedProfile = _mapper.Map(toBeUpdateProfile, userProfile);
         updatedProfile.UpdatedAt = DateTime.Now;
         await _userProfileRepository.Update(id, updatedProfile);
 

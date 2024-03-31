@@ -10,9 +10,10 @@ public class UserProfileRepository : IUserProfileRepository
 {
     private readonly IMongoCollection<UserProfile> _userProfileCollection;
 
-    public UserProfileRepository(IMongoClient mongoClient, IOptions<UserProfileDatabaseConfig> userProfileDatabaseConfig)
+    public UserProfileRepository(IMongoClient mongoClient,
+        IOptions<UserProfileDatabaseConfig> userProfileDatabaseConfig)
     {
-        var database = mongoClient.GetDatabase(userProfileDatabaseConfig.Value.DatabaseName);
+        IMongoDatabase database = mongoClient.GetDatabase(userProfileDatabaseConfig.Value.DatabaseName);
         _userProfileCollection = database.GetCollection<UserProfile>(userProfileDatabaseConfig.Value.CollectionName);
     }
 
@@ -33,13 +34,13 @@ public class UserProfileRepository : IUserProfileRepository
     public async Task<bool> Update(Guid id, UserProfile updatedEntity)
     {
         updatedEntity.Id = id;
-        var result = await _userProfileCollection.ReplaceOneAsync(u => u.Id == id, updatedEntity);
+        ReplaceOneResult result = await _userProfileCollection.ReplaceOneAsync(u => u.Id == id, updatedEntity);
         return result.IsAcknowledged && result.ModifiedCount > 0;
     }
 
     public async Task<bool> Delete(Guid id)
     {
-        var result = await _userProfileCollection.DeleteOneAsync(u => u.Id == id);
+        DeleteResult result = await _userProfileCollection.DeleteOneAsync(u => u.Id == id);
         return result.IsAcknowledged && result.DeletedCount > 0;
     }
 }
