@@ -1,10 +1,13 @@
-﻿namespace Email.Domain;
+﻿using System.Security.Cryptography;
+using System.Text;
+
+namespace Email.Domain;
 
 public class VerificationToken
 {
     public VerificationToken(string emailAddress, string token, TimeSpan? expiryDuration = null)
     {
-        EmailAddress = emailAddress;
+        HashedEmailAddress = Hash(emailAddress);
         Token = token;
         CreatedAt = DateTime.Now;
 
@@ -14,8 +17,16 @@ public class VerificationToken
         }
     }
 
-    public string EmailAddress { get; set; }
-    public string Token { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public TimeSpan ExpiryDuration { get; set; } = TimeSpan.MaxValue;
+    private static string Hash(string data)
+    {
+        using SHA256 sha256 = SHA256.Create();
+        byte[] bytes = Encoding.ASCII.GetBytes(data);
+        byte[] hashedBytes = sha256.ComputeHash(bytes);
+        return Convert.ToHexString(hashedBytes);
+    }
+
+    public string HashedEmailAddress { get; }
+    public string Token { get; }
+    public DateTime CreatedAt { get; }
+    public TimeSpan ExpiryDuration { get; } = TimeSpan.MaxValue;
 }

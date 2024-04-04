@@ -26,7 +26,7 @@ public class SendVerificationEmailConsumer : IConsumer<SendVerificationEmail>
         string emailContent = _templateProvider.Render(Templates.Verification, new
         {
             context.Message.FullName,
-            verificationToken.EmailAddress,
+            verificationToken.HashedEmailAddress,
             VerificationToken = verificationToken.Token,
         });
         await _emailService.Send(context.Message.Email, "Please verify your email account", emailContent);

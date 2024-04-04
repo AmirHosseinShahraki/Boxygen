@@ -17,7 +17,7 @@ public static class DependencyInjection
         services.Configure<TemplatesConfig>(configuration.GetSection("Templates"));
 
         services.AddTransient<ITokenGenerator, Base64UrlSafeTokenGenerator>();
-        services.AddSingleton<VerificationTokenManager>();
+        services.AddSingleton<IVerificationTokenManager, VerificationTokenManager>();
 
         services.AddSingleton<ITemplateProvider, HandlebarsTemplateProvider>();
         services.AddSingleton<IEmailService, SmtpEmailService>();

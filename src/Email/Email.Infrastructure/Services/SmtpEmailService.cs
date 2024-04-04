@@ -1,5 +1,4 @@
-﻿using Email.Application.Services;
-using Email.Application.Services.Interfaces;
+﻿using Email.Application.Services.Interfaces;
 using Email.Infrastructure.Helpers;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
