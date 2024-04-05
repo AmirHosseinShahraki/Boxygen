@@ -1,21 +1,38 @@
-﻿using Email.Application.Services.Interfaces;
+﻿using System.Text.Json;
+using Email.Application.Services.Interfaces;
+using StackExchange.Redis;
 
 namespace Email.Infrastructure.Services;
 
 public class RedisCacheManager : ICacheManager
 {
-    public Task<T> Get<T>(string key)
+    private readonly IDatabase _database;
+
+    public RedisCacheManager(IDatabase database)
     {
-        throw new NotImplementedException();
+        _database = database;
     }
 
-    public Task Add<T>(string key, T data, TimeSpan expiration)
+    public async Task<T?> Get<T>(string key)
     {
-        throw new NotImplementedException();
+        string? cachedValue = await _database.StringGetAsync(key);
+        if (cachedValue is null)
+        {
+            return default;
+        }
+
+        T? deserializedObject = JsonSerializer.Deserialize<T>(cachedValue);
+        return deserializedObject;
     }
 
-    public Task Remove(string key)
+    public async Task Add<T>(string key, T data, TimeSpan expiration)
     {
-        throw new NotImplementedException();
+        string serializedJson = JsonSerializer.Serialize(data);
+        await _database.StringSetAsync(key, serializedJson, expiration);
+    }
+
+    public async Task Remove(string key)
+    {
+        await _database.KeyDeleteAsync(key);
     }
 }
