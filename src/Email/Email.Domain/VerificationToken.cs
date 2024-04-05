@@ -5,10 +5,12 @@ namespace Email.Domain;
 
 public class VerificationToken
 {
-    public VerificationToken(string emailAddress, string token, TimeSpan? expiryDuration = null)
+    public VerificationToken(string emailAddress, string token, string verificationBaseUrl,
+        TimeSpan? expiryDuration = null)
     {
         HashedEmailAddress = Hash(emailAddress);
         Token = token;
+        VerificationBaseUrl = verificationBaseUrl;
         CreatedAt = DateTime.Now;
 
         if (expiryDuration != null)
@@ -17,6 +19,12 @@ public class VerificationToken
         }
     }
 
+    public string HashedEmailAddress { get; }
+    public string Token { get; }
+    public DateTime CreatedAt { get; }
+    public TimeSpan ExpiryDuration { get; } = TimeSpan.MaxValue;
+    public string VerificationBaseUrl { get; }
+
     private static string Hash(string data)
     {
         using SHA256 sha256 = SHA256.Create();
@@ -24,9 +32,4 @@ public class VerificationToken
         byte[] hashedBytes = sha256.ComputeHash(bytes);
         return Convert.ToHexString(hashedBytes);
     }
-
-    public string HashedEmailAddress { get; }
-    public string Token { get; }
-    public DateTime CreatedAt { get; }
-    public TimeSpan ExpiryDuration { get; } = TimeSpan.MaxValue;
 }

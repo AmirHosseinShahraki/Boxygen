@@ -2,7 +2,7 @@
 
 namespace Email.Application.Services.Interfaces;
 
-public interface IVerificationTokenManager
+public interface IVerificationTokenGenerator
 {
     public Task<VerificationToken> Generate(string email);
 }

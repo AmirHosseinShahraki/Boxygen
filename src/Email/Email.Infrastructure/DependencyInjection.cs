@@ -15,15 +15,17 @@ public static class DependencyInjection
     {
         services.Configure<SmtpConfig>(configuration.GetSection("SMTP"));
         services.Configure<TemplatesConfig>(configuration.GetSection("Templates"));
+        services.Configure<VerificationTokenConfig>(configuration.GetSection("VerificationToken"));
 
         services.AddTransient<ITokenGenerator, Base64UrlSafeTokenGenerator>();
-        services.AddSingleton<IVerificationTokenManager, VerificationTokenManager>();
+        services.AddSingleton<IVerificationTokenGenerator, VerificationTokenGenerator>();
 
         services.AddSingleton<ITemplateProvider, HandlebarsTemplateProvider>();
         services.AddSingleton<IEmailService, SmtpEmailService>();
         services.AddSingleton<ICacheManager, RedisCacheManager>();
 
         services.AddEmailMassTransit(configuration);
+        services.AddRedisDatabase(configuration);
 
         return services;
     }
