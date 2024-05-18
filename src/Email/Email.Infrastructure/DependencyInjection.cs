@@ -1,8 +1,8 @@
-﻿using Email.Application.Services;
-using Email.Application.Services.Interfaces;
+﻿using Email.Application.Services.Interfaces;
 using Email.Infrastructure.Helpers;
 using Email.Infrastructure.Helpers.Injections;
 using Email.Infrastructure.Services;
+using Email.Infrastructure.Services.TokenValidator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +19,7 @@ public static class DependencyInjection
 
         services.AddTransient<ITokenGenerator, Base64UrlSafeTokenGenerator>();
         services.AddSingleton<IVerificationTokenGenerator, VerificationTokenGenerator>();
+        services.AddSingleton<IVerificationTokenValidator, VerificationTokenValidator>();
 
         services.AddSingleton<ITemplateProvider, HandlebarsTemplateProvider>();
         services.AddSingleton<IEmailService, SmtpEmailService>();

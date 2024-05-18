@@ -15,6 +15,7 @@ public static class MassTransitInjection
         services.AddMassTransit(x =>
         {
             x.AddConsumer<SendVerificationEmailConsumer>();
+            x.AddConsumer<VerifyEmailConsumer>();
             x.SetKebabCaseEndpointNameFormatter();
             x.UsingRabbitMq((context, cfg) =>
             {

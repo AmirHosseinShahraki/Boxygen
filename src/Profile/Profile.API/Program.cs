@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using DotNetEnv;
 using Profile.API.Utilities;
 using Profile.Infrastructure;
@@ -11,7 +12,11 @@ if (builder.Environment.IsDevelopment())
 
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Default;
+});
 builder.Services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddInfrastructureServices(builder.Configuration);

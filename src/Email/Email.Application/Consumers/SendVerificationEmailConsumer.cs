@@ -23,9 +23,12 @@ public class SendVerificationEmailConsumer : IConsumer<SendVerificationEmail>
 
     public async Task Consume(ConsumeContext<SendVerificationEmail> context)
     {
-        VerificationToken verificationToken = await _verificationTokenGenerator.Generate(context.Message.Email);
+        VerificationToken verificationToken =
+            await _verificationTokenGenerator.Generate(context.Message.CorrelationId, context.Message.Email,
+                context.ResponseAddress!);
         string emailContent = _templateProvider.Render(Templates.Verification, new
         {
+            Id = context.Message.CorrelationId,
             context.Message.FullName,
             verificationToken.HashedEmailAddress,
             verificationToken.VerificationBaseUrl,

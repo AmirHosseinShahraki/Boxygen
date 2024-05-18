@@ -19,14 +19,22 @@ public class VerificationTokenGenerator : IVerificationTokenGenerator
         _cacheManager = cacheManager;
     }
 
-    public async Task<VerificationToken> Generate(string email)
+    public async Task<VerificationToken> Generate(Guid id, string email, Uri responseAddress)
     {
         string token = _tokenGenerator.Generate(_verificationTokenConfig.TokenLength);
 
-        VerificationToken verificationToken =
-            new(email, token, _verificationTokenConfig.VerificationBaseUrl, _verificationTokenConfig.TokenExpiration);
+        VerificationToken verificationToken = new()
+        {
+            Id = id,
+            HashedEmailAddress = email,
+            Token = token,
+            VerificationBaseUrl = _verificationTokenConfig.VerificationBaseUrl,
+            CreatedAt = DateTime.Now,
+            ExpiryDuration = _verificationTokenConfig.TokenExpiration,
+            ResponseAddress = responseAddress
+        };
 
-        await _cacheManager.Add(token, verificationToken, _verificationTokenConfig.TokenExpiration);
+        await _cacheManager.Add(id.ToString(), verificationToken, _verificationTokenConfig.TokenExpiration);
         return verificationToken;
     }
 }

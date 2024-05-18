@@ -4,6 +4,26 @@
   },
   "Routes": [
     {
+      "UpstreamPathTemplate": "/gateway/email/verify?id={id}&t={token}&e={email}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "DownstreamPathTemplate": "/email/verify/?id={id}&email={email}&token={token}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7004
+        }
+      ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      }
+    },
+    {
       "UpstreamPathTemplate": "/gateway/profile",
       "UpstreamHttpMethod": [
         "Get",

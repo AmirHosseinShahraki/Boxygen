@@ -5,25 +5,31 @@ namespace Email.Domain;
 
 public class VerificationToken
 {
-    public VerificationToken(string emailAddress, string token, string verificationBaseUrl,
-        TimeSpan? expiryDuration = null)
-    {
-        HashedEmailAddress = Hash(emailAddress);
-        Token = token;
-        VerificationBaseUrl = verificationBaseUrl;
-        CreatedAt = DateTime.Now;
+    private readonly string _hashedEmailAddress = null!;
+    public Guid Id { get; init; }
 
-        if (expiryDuration != null)
-        {
-            ExpiryDuration = expiryDuration.Value;
-        }
+    public string HashedEmailAddress
+    {
+        get => _hashedEmailAddress;
+        init => _hashedEmailAddress = Hash(value);
     }
 
-    public string HashedEmailAddress { get; }
-    public string Token { get; }
-    public DateTime CreatedAt { get; }
-    public TimeSpan ExpiryDuration { get; } = TimeSpan.MaxValue;
-    public string VerificationBaseUrl { get; }
+    public string Token { get; init; } = null!;
+    public DateTime CreatedAt { get; init; }
+    public TimeSpan ExpiryDuration { get; init; } = TimeSpan.MaxValue;
+    public string VerificationBaseUrl { get; init; } = null!;
+    public Uri ResponseAddress { get; init; } = null!;
+
+    public bool IsHashedEmailEqual(string email)
+    {
+        return HashedEmailAddress == Hash(email);
+    }
+
+    public bool IsExpired()
+    {
+        return CreatedAt + ExpiryDuration < DateTime.Now;
+    }
+
 
     private static string Hash(string data)
     {
