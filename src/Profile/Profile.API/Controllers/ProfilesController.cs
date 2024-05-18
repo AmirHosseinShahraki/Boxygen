@@ -29,7 +29,7 @@ public class ProfilesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get([FromRoute] Guid userId)
     {
-        var getUserProfileQuery = new GetUserProfile
+        GetUserProfile getUserProfileQuery = new()
         {
             Id = userId
         };
@@ -46,8 +46,8 @@ public class ProfilesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Submit([FromRoute] Guid userId, [FromBody] SubmitUserProfileDto submitUserProfileDto)
     {
-        var toBeUpdateUserProfile = _mapper.Map<UserProfile>(submitUserProfileDto);
-        var submitUserProfileCommand = new SubmitUserProfile()
+        UserProfile? toBeUpdateUserProfile = _mapper.Map<UserProfile>(submitUserProfileDto);
+        SubmitUserProfile submitUserProfileCommand = new()
         {
             UserProfileId = userId,
             Profile = toBeUpdateUserProfile
@@ -64,8 +64,8 @@ public class ProfilesController : ControllerBase
     [HttpPatch]
     public async Task<IActionResult> Update([FromRoute] Guid userId, [FromBody] UpdateUserProfileDto updateUserProfileDto)
     {
-        var toBeUpdateUserProfile = _mapper.Map<UserProfile>(updateUserProfileDto);
-        var updateUserProfileCommand = new UpdateUserProfile
+        UserProfile? toBeUpdateUserProfile = _mapper.Map<UserProfile>(updateUserProfileDto);
+        UpdateUserProfile updateUserProfileCommand = new()
         {
             UserProfileId = userId,
             Profile = toBeUpdateUserProfile

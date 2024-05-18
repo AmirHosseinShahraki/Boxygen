@@ -13,7 +13,7 @@ public class CredentialsRepository : ICredentialRepository
 
     public CredentialsRepository(IMongoClient mongoClient, IOptions<CredentialDatabaseSettings> credentialDatabaseSettings)
     {
-        var database = mongoClient.GetDatabase(credentialDatabaseSettings.Value.DatabaseName);
+        IMongoDatabase? database = mongoClient.GetDatabase(credentialDatabaseSettings.Value.DatabaseName);
         _credentialCollection = database.GetCollection<Credential>(credentialDatabaseSettings.Value.CollectionName);
     }
 
@@ -48,13 +48,13 @@ public class CredentialsRepository : ICredentialRepository
 
     public async Task<bool> Update(Guid credentialId, Credential updatedCredential)
     {
-        var result = await _credentialCollection.ReplaceOneAsync(u => u.Id == credentialId, updatedCredential);
+        ReplaceOneResult? result = await _credentialCollection.ReplaceOneAsync(u => u.Id == credentialId, updatedCredential);
         return result.IsAcknowledged && result.ModifiedCount > 0;
     }
 
     public async Task<bool> Delete(Guid credentialId)
     {
-        var result = await _credentialCollection.DeleteOneAsync(u => u.Id == credentialId);
+        DeleteResult? result = await _credentialCollection.DeleteOneAsync(u => u.Id == credentialId);
         return result.IsAcknowledged && result.DeletedCount > 0;
     }
 }

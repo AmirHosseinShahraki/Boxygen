@@ -1,5 +1,6 @@
 ﻿using Authentication.Application.Services;
 using Authentication.Domain.Commands;
+using Authentication.Domain.Entities;
 using Authentication.Domain.Messages;
 using Authentication.Domain.Repositories;
 using BCrypt.Net;
@@ -20,7 +21,7 @@ public class UserLoginConsumer : IConsumer<LoginUser>
 
     public async Task Consume(ConsumeContext<LoginUser> context)
     {
-        var user = await _credentialRepository.GetByUsername(context.Message.Username);
+        Credential? user = await _credentialRepository.GetByUsername(context.Message.Username);
 
         if (user is null || !BC.EnhancedVerify(context.Message.Password, user.Password, HashType.SHA512))
         {
@@ -31,7 +32,7 @@ public class UserLoginConsumer : IConsumer<LoginUser>
             return;
         }
 
-        var authToken = _jwtService.GenerateToken(user.Id, user.Username);
+        AuthToken authToken = _jwtService.GenerateToken(user.Id, user.Username);
 
         await context.RespondAsync(authToken);
     }

@@ -1,4 +1,5 @@
-﻿using Profile.Domain.Entities;
+﻿using System.Reflection;
+using Profile.Domain.Entities;
 
 namespace Profile.Application.Commands;
 
@@ -12,10 +13,10 @@ public class ProfileUpdatedCommandInvoker
 
     public async Task ExecuteCommands(UserProfile userProfile, UserProfile updatedProfile)
     {
-        foreach (var propertyInfo in typeof(UserProfile).GetProperties())
+        foreach (PropertyInfo propertyInfo in typeof(UserProfile).GetProperties())
         {
-            var propertyName = propertyInfo.Name;
-            if (_commands.TryGetValue(propertyName, out var command))
+            string propertyName = propertyInfo.Name;
+            if (_commands.TryGetValue(propertyName, out IProfileUpdatedCommand? command))
             {
                 await command.ExecuteAsync(userProfile, updatedProfile);
             }

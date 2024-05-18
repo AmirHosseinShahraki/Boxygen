@@ -1,6 +1,6 @@
 ﻿namespace Email.Infrastructure.Helpers;
 
-public class SMTPConfig
+public class SmtpConfig
 {
     public string Host { get; init; } = null!;
     public int Port { get; init; }

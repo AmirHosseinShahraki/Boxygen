@@ -24,8 +24,8 @@ public static class DependencyInjection
 
         services.AddMassTransit(x =>
         {
-            var userRegistrationDbConfig = configuration.GetSection("UserRegistrationDatabase").Get<UserRegistrationDatabaseConfig>()!;
-            var rabbitmqConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>()!;
+            UserRegistrationDatabaseConfig userRegistrationDbConfig = configuration.GetSection("UserRegistrationDatabase").Get<UserRegistrationDatabaseConfig>()!;
+            RabbitMQConfig rabbitmqConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>()!;
 
             x.AddSagaStateMachine<UserRegistrationStateMachine, UserRegistrationState>()
                 .MongoDbRepository(r =>

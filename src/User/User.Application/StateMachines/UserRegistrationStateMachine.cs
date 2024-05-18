@@ -34,10 +34,10 @@ public class UserRegistrationStateMachine : MassTransitStateMachine<UserRegistra
 
         During(CreateProfile.Pending,
             When(CreateProfile.Completed)
-                .TransitionTo(ProfilePendingSubmission)
+                .TransitionTo(PendingProfileSubmission)
         );
 
-        During(ProfilePendingSubmission,
+        During(PendingProfileSubmission,
             When(ProfileSubmitted)
                 .Request(VerifyEmail, context => new SendVerificationEmail
                 {
@@ -50,11 +50,13 @@ public class UserRegistrationStateMachine : MassTransitStateMachine<UserRegistra
 
         During(Verification,
             When(VerifyEmail.Completed)
-                .TransitionTo(Verified)
+                .TransitionTo(Verified),
+            When(VerifyEmail.Faulted)
+                .TransitionTo(Failed)
         );
     }
 
-    public State ProfilePendingSubmission { get; set; } = null!;
+    public State PendingProfileSubmission { get; set; } = null!;
     public State Verification { get; set; } = null!;
     public State Verified { get; set; } = null!;
     public State Failed { get; set; } = null!;

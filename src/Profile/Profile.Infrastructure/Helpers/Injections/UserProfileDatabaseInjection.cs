@@ -13,11 +13,11 @@ public static class UserProfileDatabaseInjection
     {
         services.Configure<UserProfileDatabaseConfig>(options =>
             configuration.GetSection("UserProfileDatabase").Bind(options));
-        var userProfileDatabaseConfig = configuration.GetSection("UserProfileDatabase").Get<UserProfileDatabaseConfig>()!;
+        UserProfileDatabaseConfig userProfileDatabaseConfig = configuration.GetSection("UserProfileDatabase").Get<UserProfileDatabaseConfig>()!;
 
         services.AddSingleton<IMongoClient>(sp =>
         {
-            var connectionString = userProfileDatabaseConfig.ConnectionString;
+            string connectionString = userProfileDatabaseConfig.ConnectionString;
             return new MongoClient(connectionString);
         });
 

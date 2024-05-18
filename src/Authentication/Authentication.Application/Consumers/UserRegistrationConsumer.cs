@@ -21,22 +21,22 @@ public class UserRegistrationConsumer : IConsumer<RegisterUser>
 
     public async Task Consume(ConsumeContext<RegisterUser> context)
     {
-        var usernameExists = await _credentialRepository.CheckUsernameExists(context.Message.Username);
+        bool usernameExists = await _credentialRepository.CheckUsernameExists(context.Message.Username);
         if (usernameExists)
         {
-            var usernameTakenEvent = new UsernameTaken();
+            UsernameTaken usernameTakenEvent = new();
             await context.RespondAsync(usernameTakenEvent);
             return;
         }
 
-        var hashedPassword = BC.EnhancedHashPassword(context.Message.Password, HashType.SHA512);
-        var createdUser = await _credentialRepository.Create(new Credential
+        string? hashedPassword = BC.EnhancedHashPassword(context.Message.Password, HashType.SHA512);
+        Credential createdUser = await _credentialRepository.Create(new Credential
         {
             Username = context.Message.Username,
             Password = hashedPassword
         });
 
-        var newUserRegisteredEvent = new NewUserRegistered
+        NewUserRegistered newUserRegisteredEvent = new()
         {
             CorrelationId = createdUser.Id,
             Username = context.Message.Username,

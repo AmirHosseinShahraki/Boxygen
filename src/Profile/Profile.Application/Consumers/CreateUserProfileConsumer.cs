@@ -17,7 +17,7 @@ public class CreateUserProfileConsumer : IConsumer<CreateProfile>
 
     public async Task Consume(ConsumeContext<CreateProfile> context)
     {
-        var userProfile = await _userProfileRepository.Create(new UserProfile
+        UserProfile userProfile = await _userProfileRepository.Create(new UserProfile
         {
             Id = context.Message.CorrelationId,
             CreatedAt = DateTime.Now
